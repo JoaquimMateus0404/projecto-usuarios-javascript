@@ -4,7 +4,6 @@ var user = {};
 function addLine(data) {
     var tr = document.createElement("tr");
     tr.innerHTML = `
-                <tr>
                     <td><img src="dist/img/user1-128x128.jpg" alt="User Image" class="img-circle img-sm"></td>
                     <td>${data.name}</td>
                     <td>${data.email}</td>
@@ -14,7 +13,6 @@ function addLine(data) {
                       <button type="button" class="btn btn-primary btn-xs btn-flat">Editar</button>
                       <button type="button" class="btn btn-danger btn-xs btn-flat">Excluir</button>
                     </td>
-                </tr>
                 `;
     document.getElementById("table-users").appendChild(tr);
 }
