@@ -1,5 +1,5 @@
 class UserController {
-    
+
     constructor(formEl, tableId){
         this.formEl = document.getElementById(formEl);
         this.tableId = document.getElementById(tableId) || "table-users";
@@ -13,6 +13,12 @@ class UserController {
 
         
             let objectUser =  this.getValues();
+
+            this.getPhoto().then((data) => {
+                objectUser.photo = data;
+            }).catch((error) => {
+                console.error("Error getting photo:", error);
+            });
         
             this.addLine(objectUser, this.tableId);
         
@@ -38,12 +44,31 @@ class UserController {
         return objectUser;
     }
 
+    getPhoto(callback) {
+
+        let fileReader = new FileReader();
+        
+        let elements = [...this.formEl.elements].filter(item => {
+            if (item.name === "photo" && item.files.length) {
+               return item;
+            }
+        });
+
+        let fale = elements[0].files[0];
+
+        fileReader.onload = () => {
+            callback(fileReader.result);
+        };
+
+        fileReader.readAsDataURL(file);
+    }
+
     
     // Add a new line to the table with the user data
     addLine(data, tableId) {
         var tr = document.createElement("tr");
         tr.innerHTML = `
-                        <td><img src="dist/img/user1-128x128.jpg" alt="User Image" class="img-circle img-sm"></td>
+                        <td><img src="${data.photo}" alt="User Image" class="img-circle img-sm"></td>
                         <td>${data.name}</td>
                         <td>${data.email}</td>
                         <td>${data.admin}</td>
