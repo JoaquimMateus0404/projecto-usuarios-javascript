@@ -13,11 +13,14 @@ class UserController {
       
             let objectUser =  this.getValues();
 
-           this.getPhoto((content) => {
+            this.getPhoto().then((content) => {
                 objectUser.photo = content;
                 this.addLine(objectUser, this.tableId);
                 this.formEl.reset();
+            }, function(error) {
+                console.error("Error reading photo:", error);
             });
+          
         
         });
     }
