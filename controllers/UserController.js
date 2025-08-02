@@ -1,11 +1,31 @@
 class UserController {
-    constructor(formEl){
-        this.formEl = document.querySelector(formEl);
+    
+    constructor(formEl, tableId){
+        this.formEl = document.getElementById(formEl);
+        this.tableId = document.getElementById(tableId) || "table-users";
     }
 
+    // Initialize the form submission event
+    // and add a new user line to the table
+    onSubmit(){
+        this.formEl.addEventListener("submit", event => {
+            event.preventDefault();
+
+        
+            let objectUser =  this.getValues();
+        
+            this.addLine(objectUser, this.tableId);
+        
+            this.formEl.reset();
+        
+        });
+    }
+
+    // Get values from the form and create a User object
     getValues(){
 
-        this.formEl.Elements.forEach(function(field, index){
+        let user = {};
+        Array.from(this.formEl.elements).forEach(function(field, index){
             if (field.name == "gender") { 
                 if (field.checked)  user[field.name] = field.value;
             }else {
@@ -16,5 +36,23 @@ class UserController {
         var objectUser = new User(user.name, user.gender, user.birth, user.country, user.email, user.password, user.photo, user.admin);
 
         return objectUser;
+    }
+
+    
+    // Add a new line to the table with the user data
+    addLine(data, tableId) {
+        var tr = document.createElement("tr");
+        tr.innerHTML = `
+                        <td><img src="dist/img/user1-128x128.jpg" alt="User Image" class="img-circle img-sm"></td>
+                        <td>${data.name}</td>
+                        <td>${data.email}</td>
+                        <td>${data.admin}</td>
+                        <td>${data.birth}</td>
+                        <td>
+                          <button type="button" class="btn btn-primary btn-xs btn-flat">Editar</button>
+                          <button type="button" class="btn btn-danger btn-xs btn-flat">Excluir</button>
+                        </td>
+                    `;
+        this.tableId.appendChild(tr);
     }
 }
