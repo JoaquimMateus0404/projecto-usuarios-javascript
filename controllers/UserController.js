@@ -10,8 +10,7 @@ class UserController {
     onSubmit(){
         this.formEl.addEventListener("submit", event => {
             event.preventDefault();
-
-        
+      
             let objectUser =  this.getValues();
 
            this.getPhoto((content) => {
@@ -40,23 +39,30 @@ class UserController {
         return objectUser;
     }
 
-    getPhoto(callback) {
+    // Get the photo from the file input and convert it to base64
+    getPhoto() {
 
-        let fileReader = new FileReader();
+        return new Promise((resolve, reject) => {
+            let fileReader = new FileReader();
         
-        let elements = [...this.formEl.elements].filter(item => {
+            let elements = [...this.formEl.elements].filter(item => {
             if (item.name === "photo" && item.files.length) {
                return item;
+                }
+            });
+
+            let file = elements[0].files[0];
+
+            fileReader.onload = () => {
+                resolve(fileReader.result);
+            };
+
+            fileReader.onerror = (error) => {
+                reject(error);
             }
+
+            fileReader.readAsDataURL(file);
         });
-
-        let fale = elements[0].files[0];
-
-        fileReader.onload = () => {
-            callback(fileReader.result);
-        };
-
-        fileReader.readAsDataURL(file);
     }
 
     
