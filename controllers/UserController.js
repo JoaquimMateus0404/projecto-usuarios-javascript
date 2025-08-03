@@ -19,8 +19,7 @@ class UserController {
                 this.formEl.reset();
             }, function(error) {
                 console.error("Error reading photo:", error);
-            });
-          
+            });         
         
         });
     }
@@ -44,26 +43,31 @@ class UserController {
 
     // Get the photo from the file input and convert it to base64
     getPhoto() {
-
         return new Promise((resolve, reject) => {
             let fileReader = new FileReader();
-        
+    
             let elements = [...this.formEl.elements].filter(item => {
-            if (item.name === "photo" && item.files.length) {
-               return item;
-                }
+                return item.name === "photo" && item.files.length;
             });
-
+    
+            if (elements.length === 0 || !elements[0].files[0]) {
+                // Retorna uma imagem padrão em Base64
+                const defaultPhotoBase64 = "data:image/svg+xml;base64,          PHN2ZyBmaWxsPSIjNjY2IiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDUwIDUwIj48Y2lyY2xlIGN4PSIyNSIgY3k9IjEzIiByPSIxMCIvPjxwYXRoIGQ9Ik0zNSAzOGgtMjBjLTUuNTIgMC0xMCA0LjQ4LTEwIDEwdjJoNDB2LTJjMC01LjUyLTQuNDgtMTAtMTAtMTB6Ii8+PC9zdmc+";
+                resolve(defaultPhotoBase64);
+                return;
+            }
+    
             let file = elements[0].files[0];
-
+    
             fileReader.onload = () => {
                 resolve(fileReader.result);
             };
-
+    
             fileReader.onerror = (error) => {
+                console.error("Error reading file:", error);
                 reject(error);
-            }
-
+            };
+    
             fileReader.readAsDataURL(file);
         });
     }
